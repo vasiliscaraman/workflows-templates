@@ -44,7 +44,7 @@ This workflow detects this attack pattern in real-time and automatically suspend
 
 The workflow uses a single API Endpoint triggered by three Event Hooks. When any of the three monitored events occurs, the flow determines which event type it was, checks the tracking table, calculates the time window, and takes appropriate action based on whether all three events have occurred within one hour.
 
-![Architecture Diagram](resources/architecture-diagram.png)
+![Architecture Diagram](resources/detect-and-suspend-accounts-based-on-suspicious-events.png)
 
 ## Setup Steps
 
