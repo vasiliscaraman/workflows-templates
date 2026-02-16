@@ -50,11 +50,11 @@ The workflow uses a single API Endpoint triggered by three Event Hooks. When any
 
 ### Step 1: Import the Workflow
 
-1. Download the `detect-and-suspend-accounts-based-on-suspicious-events.folder` file
+1. Download the `workflow.flopack` file
 2. In Okta Workflows console, click **Flows**
 3. Click the **three-dot menu** (⋮) in any folder
 4. Select **Import**
-5. Choose the downloaded `.folder` file
+5. Choose the downloaded `.flopack` file
 6. Click **Import**
 
 The workflow and table are now imported with all configurations.
@@ -78,10 +78,8 @@ The workflow requires an Okta connection with specific scopes:
 1. Open the imported flow
 2. Click on the **API Endpoint** card (first card in the flow)
 3. Note the **Invoke URL** (you'll need this for Event Hooks)
-4. Configure security (recommended: **Client Token**):
-   - Set a **Token Name** (e.g., `suspicious-events-hook`)
-   - Set a secure **Token Secret** (generate a strong random string)
-   - Save these values - you'll need them for Event Hooks
+4. Configure security:
+   - An Alias will be generated, along with a Secret (if selecting Client Credentials to secure the endpoint). You need to add these along with the invoke URL for the Event Hooks.
 
 ### Step 4: Create Event Hooks
 
@@ -94,12 +92,12 @@ Create three Event Hooks in Okta Admin Console, all pointing to the same API End
 3. Configure:
    - **Name:** `Suspicious Activity - MFA Update`
    - **URL:** [Paste the API Endpoint Invoke URL]
-   - **Authentication:** Client Secret
-     - **Client Secret Name:** [Token Name from Step 3]
+   - **Authentication:** Client Secret (if chosen on the API Endpoint WF trigger card)
+     - **Client Secret Name:** [Token Alias from Step 3]
      - **Client Secret:** [Token Secret from Step 3]
-   - **Subscribe to Events:** Select `user.mfa.factor.update`
+   - **Events:** Select `user.mfa.factor.update`
 4. Click **Save & Continue**
-5. Click **Verify** to test the connection
+5. Click **Verify** to test the connection (if required)
 
 #### Event Hook 2: Password Reset
 
@@ -177,7 +175,7 @@ Event Hooks can be tested directly from Okta Admin:
 
 To verify complete functionality:
 
-1. Create a test user (older than 7 days)
+1. Create a test user (either have a test user older than 7 days or remove the "Continue If" card that skips new users temporarily)
 2. Within 1 hour, trigger all 3 events:
    - Reset the test user's password
    - Update the test user's MFA factor
@@ -200,8 +198,8 @@ To verify complete functionality:
 
 - Verify all three Event Hooks are **Active** in Okta Admin
 - Check Event Hook **Verification Status** is successful
-- Ensure API Endpoint URL matches exactly in all three hooks
-- Verify authentication credentials (Client Secret) match between flow and hooks
+- Ensure API Endpoint invoke URL matches exactly in all three hooks
+- Verify authentication credentials (Client Secret) match between flow and hooks (if used)
 
 ### User Not Suspended
 
@@ -213,14 +211,13 @@ To verify complete functionality:
 ### Table Not Updating
 
 - Verify the Workflows Table was imported successfully
-- Check table has correct column names (case-sensitive)
-- Review flow execution history for table operation errors
+- Check table has correct column names
 
 ## Customization Ideas
 
 This workflow can be extended to:
 
-- **Add notifications:** Send Slack/email alerts when users are suspended
+- **Add notifications:** Send Slack/email alerts when users are suspended by this workflow
 - **Adjust time window:** Modify the 1-hour threshold to suit your security requirements
 - **Add more events:** Monitor additional suspicious behaviors
 - **Integrate with SIEM:** Send events to external security tools
@@ -232,8 +229,4 @@ This workflow can be extended to:
 Specialist, Technical Account Manager  
 Customer Success  
 vasilis.caraman@okta.com  
-Okta
-
-## Support
-
-Questions or feedback? Please open an issue in this repository.
+**Okta**
